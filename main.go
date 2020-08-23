@@ -25,11 +25,11 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"data": "Hello World"})
 	})
-	r.GET("/cart/:id", controllers.GetCart)
-	r.POST("/cart", controllers.CreateCart)
-	r.PATCH("/cart/:id", controllers.UpdateCart)
-	r.DELETE("/cart/:id", controllers.DeleteCart)
-	r.POST("/cart/:id/checkout", controllers.CartCheckOut)
+	r.GET("/cart/:id/", controllers.GetCart)
+	r.POST("/cart/save/", controllers.CreateCart)
+	r.PATCH("/cart/save/:id/", controllers.UpdateCart)
+	r.DELETE("/cart/:id/", controllers.DeleteCart)
+	r.POST("/cart/checkout/:id/", controllers.CartCheckOut)
 
 	r.Run()
 }

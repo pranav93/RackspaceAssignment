@@ -1,6 +1,8 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Discount Discount
 type Discount struct {
@@ -68,7 +70,7 @@ func (c *Cart) ApplyPriceItem(product Product, qty int, price float64, rule Rule
 // AddFreeItem adds or updates the items for getFree rules
 func (c *Cart) AddFreeItem(product Product, qty int, rule Rule) {
 	fmt.Println("In AddFreeItem", qty)
-	for i := 0; i < len(c.Items); i++ {
+	for i := 0; i < len(c.Items) && qty > 0; i++ {
 		if c.Items[i].Product.Code == product.Code {
 			c.Items[i].Price = 0
 			c.Items[i].Discount = &Discount{
@@ -76,12 +78,9 @@ func (c *Cart) AddFreeItem(product Product, qty int, rule Rule) {
 				Price: -product.Price,
 			}
 			qty--
-			if qty == 0 {
-				break
-			}
 		}
 	}
-	for qty != 0 {
+	for qty > 0 {
 		freeItem := CreateCartItem(product.Code)
 		freeItem.Price = 0
 		freeItem.Discount = &Discount{
@@ -92,10 +91,6 @@ func (c *Cart) AddFreeItem(product Product, qty int, rule Rule) {
 		c.CartMap[product.Code]++
 		qty--
 	}
-
-	fmt.Println("FreeItem", *c.Items[0])
-	fmt.Println("FreeItem", *c.Items[1])
-	fmt.Println("FreeItem", *c.Items[2])
 }
 
 // AddItem AddItem

@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/google/uuid"
@@ -102,6 +103,25 @@ func CalculateCart(cartID string) error {
 		return err
 	}
 	cart.Calculate()
+	return nil
+}
+
+// ResetDiscount resets discount
+func ResetDiscount(cartID string) error {
+	cart, err := GetCart(cartID)
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(cart.Items); i++ {
+		if val, ok := ProductsDBMap[cart.Items[i].Product.Code]; ok {
+			cart.Items[i].Price = val.Price
+			cart.Items[i].Discount = nil
+		} else {
+			fmt.Println(cart.Items[i].Product.Code + " is invalid product code")
+			continue
+		}
+	}
 	return nil
 }
 

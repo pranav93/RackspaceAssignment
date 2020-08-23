@@ -94,6 +94,11 @@ func UpdateCart(c *gin.Context) {
 	// and calculated value for cart will be wrong
 	// Have to figure out how can we rollback it in golang map
 	// Or maybe just db should be used
+	err := models.ResetDiscount(cartID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	models.CalculateCart(cartID)
 	cart, _ := models.GetCart(cartID)
 	c.JSON(http.StatusOK, gin.H{"data": gin.H{"cart": cart}})
