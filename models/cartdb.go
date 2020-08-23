@@ -94,3 +94,18 @@ func RemoveFromCart(cartID string, cartItemID string) error {
 
 	return nil
 }
+
+// CalculateCart calculates the cart total
+func CalculateCart(cartID string) error {
+	cart, err := GetCart(cartID)
+	if err != nil {
+		return err
+	}
+
+	var total float64
+	for i := 0; i < len(cart.Items); i++ {
+		total += cart.Items[i].Price
+	}
+	cart.Total = total
+	return nil
+}

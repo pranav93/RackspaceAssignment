@@ -30,7 +30,7 @@ func CreateCart(c *gin.Context) {
 	for i := 0; i < len(input.CartItems); i++ {
 		models.AddToCart(cartID, input.CartItems[i].ProductCode, 1)
 	}
-
+	models.CalculateCart(cartID)
 	cart, _ := models.GetCart(cartID)
 	c.JSON(http.StatusOK, gin.H{"data": gin.H{"cart": cart}})
 }
@@ -88,6 +88,13 @@ func UpdateCart(c *gin.Context) {
 		}
 	}
 
+	// I am not using db session and rollback here,
+	// for simplicity key-val store in golang map is used
+	// so if error occurs, partial operation will be done
+	// and calculated value for cart will be wrong
+	// Have to figure out how can we rollback it in golang map
+	// Or maybe just db should be used
+	models.CalculateCart(cartID)
 	cart, _ := models.GetCart(cartID)
 	c.JSON(http.StatusOK, gin.H{"data": gin.H{"cart": cart}})
 }
