@@ -108,3 +108,15 @@ func DeleteCart(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"data": gin.H{"deleted": true}})
 }
+
+// CartCheckOut CartCheckOut
+func CartCheckOut(c *gin.Context) {
+	cart, err := models.GetCart(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"data": gin.H{"error": err.Error()}})
+		return
+	}
+	cart.ApplyDiscount()
+	cart.Calculate()
+	c.JSON(http.StatusOK, gin.H{"data": gin.H{"cart": cart}})
+}

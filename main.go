@@ -29,6 +29,7 @@ func main() {
 	r.POST("/cart", controllers.CreateCart)
 	r.PATCH("/cart/:id", controllers.UpdateCart)
 	r.DELETE("/cart/:id", controllers.DeleteCart)
+	r.POST("/cart/:id/checkout", controllers.CartCheckOut)
 
 	r.Run()
 }

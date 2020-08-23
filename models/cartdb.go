@@ -101,11 +101,15 @@ func CalculateCart(cartID string) error {
 	if err != nil {
 		return err
 	}
-
-	var total float64
-	for i := 0; i < len(cart.Items); i++ {
-		total += cart.Items[i].Price
-	}
-	cart.Total = total
+	cart.Calculate()
 	return nil
 }
+
+// 	cart.ApplyDiscount()
+// var total float64
+// for i := 0; i < len(cart.Items); i++ {
+// 	total += cart.Items[i].Price
+// }
+// cart.Total = total
+// 	return nil
+// }

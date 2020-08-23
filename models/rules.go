@@ -46,21 +46,27 @@ func (r Rule) ApplyRule(cart *Cart) error {
 		fmt.Println(qty)
 		fmt.Println(ok)
 		switch {
+		// No need to repeat these switch statements
 		case r.Action.Operator == "ge" && qty >= r.Action.Qty:
 			fmt.Println("ApplyRule GreaterEq")
-			r.ApplyResult(cart)
+			err := r.ApplyResult(cart)
+			return err
 		case r.Action.Operator == "le" && qty <= r.Action.Qty:
 			fmt.Println("ApplyRule LesserEq")
-			r.ApplyResult(cart)
+			err := r.ApplyResult(cart)
+			return err
 		case r.Action.Operator == "g" && qty > r.Action.Qty:
 			fmt.Println("ApplyRule Lesser")
-			r.ApplyResult(cart)
+			err := r.ApplyResult(cart)
+			return err
 		case r.Action.Operator == "l" && qty > r.Action.Qty:
 			fmt.Println("ApplyRule Lesser")
-			r.ApplyResult(cart)
+			err := r.ApplyResult(cart)
+			return err
 		case r.Action.Operator == "eq" && qty == r.Action.Qty:
 			fmt.Println("ApplyRule Equal")
-			r.ApplyResult(cart)
+			err := r.ApplyResult(cart)
+			return err
 		default:
 			fmt.Println("Invalid case", r.Action.Operator)
 			return errors.New("Invalid case " + r.Action.Operator)
@@ -70,10 +76,10 @@ func (r Rule) ApplyRule(cart *Cart) error {
 }
 
 // ApplyResult applies the result for a rule
-func (r Rule) ApplyResult(cart *Cart) {
+func (r Rule) ApplyResult(cart *Cart) error {
 	fmt.Println("In ApplyResult")
 	addQty := r.Result.Qty
-	addProduct := r.Result.ProductCode
+	addedProductID := r.Result.ProductCode
 	if addQty < 0 {
 		// Unlimited case
 		sourceqty, _ := cart.CartMap[r.Action.ProductCode]
@@ -85,9 +91,17 @@ func (r Rule) ApplyResult(cart *Cart) {
 			addQty = addQty / 2
 		}
 		fmt.Println("addQty", addQty)
-		cart.AddFreeItem(ProductsDBMap[addProduct], addQty)
+
+		var product Product
+		if val, ok := ProductsDBMap[addedProductID]; ok {
+			product = val
+		} else {
+			return errors.New("Invalid product id " + addedProductID)
+		}
+
+		cart.AddFreeItem(product, addQty, r)
 		// r.CalculateCart(cart) recalculate cartMap and price
-		return
+		return nil
 	}
 
 	// ApplyPrice case
@@ -98,5 +112,6 @@ func (r Rule) ApplyResult(cart *Cart) {
 	} else {
 		price = appliePrice
 	}
-	cart.ApplyPriceItem(ProductsDBMap[addProduct], addQty, price)
+	cart.ApplyPriceItem(ProductsDBMap[addedProductID], addQty, price, r)
+	return nil
 }
