@@ -5,12 +5,14 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/pranav93/RackspaceAssignment/setup"
 )
 
 func TestPingRoute(t *testing.T) {
 	// The setupServer method, that we previously refactored
 	// is injected into a test server
-	ts := httptest.NewServer(setupServer())
+	ts := httptest.NewServer(setup.Server())
 	// Shut down the server and block until all requests have gone through
 	defer ts.Close()
 
