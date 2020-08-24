@@ -13,15 +13,10 @@ func init() {
 	scripts.CreateRulesDB()
 	scripts.CreateProductsDB()
 	scripts.CreateCartsDB()
-	// log.Println(models.ProductsDBMap)
-	// log.Println(models.RulesDBMap)
-	// log.Println(models.ActionsDBMap)
-	// log.Println(models.ResultsDBMap)
 }
 
-func main() {
+func setupServer() *gin.Engine {
 	r := gin.Default()
-
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"data": "Hello World"})
 	})
@@ -30,6 +25,9 @@ func main() {
 	r.PATCH("/cart/save/:id/", controllers.UpdateCart)
 	r.DELETE("/cart/:id/", controllers.DeleteCart)
 	r.POST("/cart/checkout/:id/", controllers.CartCheckOut)
+	return r
+}
 
-	r.Run()
+func main() {
+	setupServer().Run()
 }

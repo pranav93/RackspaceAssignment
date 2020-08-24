@@ -86,6 +86,7 @@ func RemoveFromCart(cartID string, cartItemID string) error {
 		return errors.New("Cart Item with ID " + cartItemID + " does not exist in cart with ID " + cartID)
 	}
 	productCode := cart.Items[foundIndex].Code
+	DeleteCartItem(cartItemID)
 
 	cart.Items = append(cart.Items[:foundIndex], cart.Items[foundIndex+1:]...)
 	if val, ok := cart.CartMap[productCode]; ok {
