@@ -11,9 +11,7 @@ import (
 
 // CreateCartInput is an input for cart creation
 type CreateCartInput struct {
-	CartItems []struct {
-		ProductCode string `json:"productCode"`
-	} `json:"cartItems"`
+	CartItems map[string]int `json:"cartItems" binding:"required"`
 }
 
 // CreateCart Creates a cart
@@ -27,8 +25,8 @@ func CreateCart(c *gin.Context) {
 
 	cartID := models.CreateCart()
 	fmt.Println(cartID)
-	for i := 0; i < len(input.CartItems); i++ {
-		models.AddToCart(cartID, input.CartItems[i].ProductCode, 1)
+	for k, val := range input.CartItems {
+		models.AddToCart(cartID, k, val)
 	}
 	models.CalculateCart(cartID)
 	cart, _ := models.GetCart(cartID)
@@ -49,12 +47,12 @@ func GetCart(c *gin.Context) {
 type UpdateCartInput struct {
 	CartItems struct {
 		Add []struct {
-			ProductCode string `json:"productCode"`
+			ProductCode string `json:"productCode" binding:"required"`
 		} `json:"add"`
 		Remove []struct {
-			CartItemID string `json:"cartItemId"`
+			CartItemID string `json:"cartItemId" binding:"required"`
 		} `json:"remove"`
-	} `json:"cartItems"`
+	} `json:"cartItems" binding:"required"`
 }
 
 // UpdateCart Updates a cart
