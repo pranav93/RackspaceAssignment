@@ -13,5 +13,5 @@ RUN go mod download
 
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/app
-EXPOSE 8080
+EXPOSE 3000
 ENTRYPOINT ["/go/bin/app"]
