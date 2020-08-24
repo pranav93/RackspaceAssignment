@@ -11,7 +11,7 @@ import (
 
 // CreateCartInput is an input for cart creation
 type CreateCartInput struct {
-	CartItems map[string]int `json:"cartItems" binding:"required"`
+	CartItems map[string]int `json:"cartItems"`
 }
 
 // CreateCart Creates a cart
@@ -46,13 +46,9 @@ func GetCart(c *gin.Context) {
 // UpdateCartInput UpdateCartInput
 type UpdateCartInput struct {
 	CartItems struct {
-		Add []struct {
-			ProductCode string `json:"productCode" binding:"required"`
-		} `json:"add"`
-		Remove []struct {
-			CartItemID string `json:"cartItemId" binding:"required"`
-		} `json:"remove"`
-	} `json:"cartItems" binding:"required"`
+		Add    []string `json:"add"`
+		Remove []string `json:"remove"`
+	} `json:"cartItems"`
 }
 
 // UpdateCart Updates a cart
@@ -71,7 +67,7 @@ func UpdateCart(c *gin.Context) {
 	fmt.Println(input)
 
 	for i := 0; i < len(input.CartItems.Add); i++ {
-		err := models.AddToCart(cartID, input.CartItems.Add[i].ProductCode, 1)
+		err := models.AddToCart(cartID, input.CartItems.Add[i], 1)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -79,7 +75,7 @@ func UpdateCart(c *gin.Context) {
 	}
 
 	for i := 0; i < len(input.CartItems.Remove); i++ {
-		err := models.RemoveFromCart(cartID, input.CartItems.Remove[i].CartItemID)
+		err := models.RemoveFromCart(cartID, input.CartItems.Remove[i])
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
