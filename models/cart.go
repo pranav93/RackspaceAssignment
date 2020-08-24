@@ -1,7 +1,7 @@
 package models
 
 import (
-	"fmt"
+	"log"
 )
 
 // Discount Discount
@@ -44,14 +44,14 @@ func (c *Cart) ApplyDiscount() {
 	rules := GetAllRulesDB()
 
 	for ID, rule := range rules {
-		fmt.Println("Applying rule with id", ID)
+		log.Println("Applying rule with id", ID)
 		rule.ApplyRule(c)
 	}
 }
 
 // ApplyPriceItem applies the provided price for cart items
 func (c *Cart) ApplyPriceItem(product Product, qty int, price float64, rule Rule) {
-	fmt.Println("In ApplyPriceItem", qty)
+	log.Println("In ApplyPriceItem", qty)
 	for i := 0; i < len(c.Items); i++ {
 		if c.Items[i].Product.Code == product.Code {
 			c.Items[i].Price = price
@@ -69,7 +69,7 @@ func (c *Cart) ApplyPriceItem(product Product, qty int, price float64, rule Rule
 
 // AddFreeItem adds or updates the items for getFree rules
 func (c *Cart) AddFreeItem(product Product, qty int, rule Rule) {
-	fmt.Println("In AddFreeItem", qty)
+	log.Println("In AddFreeItem", qty)
 	for i := 0; i < len(c.Items) && qty > 0; i++ {
 		if c.Items[i].Product.Code == product.Code {
 			c.Items[i].Price = 0
@@ -98,10 +98,3 @@ func (c *Cart) AddItem(item *CartItem) []*CartItem {
 	c.Items = append(c.Items, item)
 	return c.Items
 }
-
-// func (c *Cart) AddItem(cartItem CartItem) []CartItem {
-// 	c.Items = append(c.Items, cartItem)
-// 	fmt.Println("Added item to cart")
-// 	fmt.Println("c.Items", c.Items)
-// 	return c.Items
-// }

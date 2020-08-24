@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/google/uuid"
@@ -118,7 +117,7 @@ func ResetDiscount(cartID string) error {
 			cart.Items[i].Price = val.Price
 			cart.Items[i].Discount = nil
 		} else {
-			fmt.Println(cart.Items[i].Product.Code + " is invalid product code")
+			log.Println(cart.Items[i].Product.Code + " is invalid product code")
 			continue
 		}
 	}

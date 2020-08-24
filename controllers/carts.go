@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/pranav93/RackspaceAssignment/models"
@@ -21,10 +21,10 @@ func CreateCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println(input)
+	log.Println(input)
 
 	cartID := models.CreateCart()
-	fmt.Println(cartID)
+	log.Println(cartID)
 	for k, val := range input.CartItems {
 		models.AddToCart(cartID, k, val)
 	}
@@ -64,7 +64,7 @@ func UpdateCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println(input)
+	log.Println(input)
 
 	for i := 0; i < len(input.CartItems.Add); i++ {
 		err := models.AddToCart(cartID, input.CartItems.Add[i], 1)

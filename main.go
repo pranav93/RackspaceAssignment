@@ -13,10 +13,10 @@ func init() {
 	scripts.CreateRulesDB()
 	scripts.CreateProductsDB()
 	scripts.CreateCartsDB()
-	// fmt.Println(models.ProductsDBMap)
-	// fmt.Println(models.RulesDBMap)
-	// fmt.Println(models.ActionsDBMap)
-	// fmt.Println(models.ResultsDBMap)
+	// log.Println(models.ProductsDBMap)
+	// log.Println(models.RulesDBMap)
+	// log.Println(models.ActionsDBMap)
+	// log.Println(models.ResultsDBMap)
 }
 
 func main() {

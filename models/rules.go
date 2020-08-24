@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"fmt"
+	"log"
 )
 
 // Rule is a struct for storing rules data
@@ -36,39 +36,39 @@ type Result struct {
 
 // ApplyRule applies the rule
 func (r Rule) ApplyRule(cart *Cart) error {
-	fmt.Println("In ApplyRule")
-	fmt.Println(cart)
-	fmt.Println(r.Action.ProductCode)
-	fmt.Println(r.Action.Operator)
-	fmt.Println(r.Action.Qty)
+	log.Println("In ApplyRule")
+	log.Println(cart)
+	log.Println(r.Action.ProductCode)
+	log.Println(r.Action.Operator)
+	log.Println(r.Action.Qty)
 
 	if qty, ok := cart.CartMap[r.Action.ProductCode]; ok {
-		fmt.Println(qty)
-		fmt.Println(ok)
+		log.Println(qty)
+		log.Println(ok)
 		switch {
 		// No need to repeat these switch statements
 		case r.Action.Operator == "ge" && qty >= r.Action.Qty:
-			fmt.Println("ApplyRule GreaterEq")
+			log.Println("ApplyRule GreaterEq")
 			err := r.ApplyResult(cart)
 			return err
 		case r.Action.Operator == "le" && qty <= r.Action.Qty:
-			fmt.Println("ApplyRule LesserEq")
+			log.Println("ApplyRule LesserEq")
 			err := r.ApplyResult(cart)
 			return err
 		case r.Action.Operator == "g" && qty > r.Action.Qty:
-			fmt.Println("ApplyRule Lesser")
+			log.Println("ApplyRule Lesser")
 			err := r.ApplyResult(cart)
 			return err
 		case r.Action.Operator == "l" && qty > r.Action.Qty:
-			fmt.Println("ApplyRule Lesser")
+			log.Println("ApplyRule Lesser")
 			err := r.ApplyResult(cart)
 			return err
 		case r.Action.Operator == "eq" && qty == r.Action.Qty:
-			fmt.Println("ApplyRule Equal")
+			log.Println("ApplyRule Equal")
 			err := r.ApplyResult(cart)
 			return err
 		default:
-			fmt.Println("Invalid case", r.Action.Operator)
+			log.Println("Invalid case", r.Action.Operator)
 			return errors.New("Invalid case " + r.Action.Operator)
 		}
 	}
@@ -77,7 +77,7 @@ func (r Rule) ApplyRule(cart *Cart) error {
 
 // ApplyResult applies the result for a rule
 func (r Rule) ApplyResult(cart *Cart) error {
-	fmt.Println("In ApplyResult")
+	log.Println("In ApplyResult")
 	addQty := r.Result.Qty
 	addedProductID := r.Result.ProductCode
 	if addQty < 0 {
@@ -90,7 +90,7 @@ func (r Rule) ApplyResult(cart *Cart) error {
 			// If it is a BOGO offer
 			addQty = addQty / 2
 		}
-		fmt.Println("addQty", addQty)
+		log.Println("addQty", addQty)
 
 		var product Product
 		if val, ok := ProductsDBMap[addedProductID]; ok {
