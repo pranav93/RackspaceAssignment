@@ -1,0 +1,14 @@
+FROM golang:1.14
+# All these steps will be cached
+
+RUN apt-get update
+RUN apt-get install ca-certificates git
+
+Run git clone https://github.com/pranav93/RackspaceAssignment.git
+WORKDIR ./RackspaceAssignment
+
+RUN go mod download
+
+# Build the binary
+RUN CGO_ENABLED=0 go test ./... -coverprofile cover.out
+RUN CGO_ENABLED=0 go tool cover -func=cover.out
