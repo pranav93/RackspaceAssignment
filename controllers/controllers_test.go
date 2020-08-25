@@ -316,3 +316,71 @@ func TestCartGetAPI(t *testing.T) {
 		}
 	}
 }
+
+func TestCartUpdateAPI(t *testing.T) {
+	// The setupServer method, that we previously refactored
+	// is injected into a test server
+	ts := httptest.NewServer(setup.Server())
+	// Shut down the server and block until all requests have gone through
+	defer ts.Close()
+
+	// Make a request to our server with the {base url}/ping
+	payload := strings.NewReader(`
+	{
+		"cartItems": {
+			"CH1": 1,
+			"AP1": 3
+		}
+	}"
+	`)
+
+	resp, err := http.Post(fmt.Sprintf("%s/cart/save/", ts.URL), "application/json", payload)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	type getIDStruct struct {
+		Data struct {
+			Cart struct {
+				ID string `json:"ID"`
+			} `json:"cart"`
+		} `json:"data"`
+	}
+
+	dec := json.NewDecoder(resp.Body)
+
+	var cartID string
+	for dec.More() {
+		var response getIDStruct
+		err := dec.Decode(&response)
+		if err != nil {
+			t.Fatal(err)
+		}
+		log.Printf("Cart id is %s\n", response.Data.Cart.ID)
+		cartID = response.Data.Cart.ID
+	}
+
+	payload = strings.NewReader(
+		`{
+			"cartItems": {
+				"add": ["AP1"]
+				}
+			}"
+		}`)
+
+	client := &http.Client{}
+	req, err := http.NewRequest("PATCH", fmt.Sprintf("%s/cart/save/%s/", ts.URL, cartID), payload)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	defer res.Body.Close()
+	_, err = ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
