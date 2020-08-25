@@ -2,7 +2,7 @@
 
 Assignment solution for -> https://gist.github.com/jbartels/d75a9f5282abebe071694723a5f25f0e
 
-## How to install??
+## How to install?
 First of all Install docker, then run the following commands
 ```bash
 git clone https://github.com/pranav93/RackspaceAssignment.git
@@ -154,6 +154,28 @@ The result should be,
 ```
 
 Here replace `becece80-5653-487f-b4ae-085cb2fb210c` with your cart id.
+
+***
+
+## How to test?
+To test this project run the command
+
+```bash
+docker build --file DockerfileTest -t racktest . 
+```
+
+It will provide the test information with the coverage stats for each function. It should look like this,
+
+```
+.
+.
+github.com/pranav93/RackspaceAssignment/models/cart.go:43:		ApplyDiscount	100.0%
+github.com/pranav93/RackspaceAssignment/models/cart.go:53:		ApplyPriceItem	100.0%
+github.com/pranav93/RackspaceAssignment/models/cart.go:71:		AddFreeItem	76.9%
+.
+.
+.
+```
 
 ***
 To apply discounts, we use a set of rules. The structs for it are,
