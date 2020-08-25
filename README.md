@@ -161,7 +161,11 @@ Here replace `becece80-5653-487f-b4ae-085cb2fb210c` with your cart id.
 To test this project run the command
 
 ```bash
-docker build --file DockerfileTest -t racktest . 
+docker build --file DockerfileTestLocal -t racktest .
+```
+Or
+```bash
+docker build --file DockerfileTestMaster -t racktest .
 ```
 
 It will provide the test information with the coverage stats for each function. It should look like this,
